@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Price Finder</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #eef2f7;
+  color: #222;
+}
+
+header {
+  background: #172554;
+  color: white;
+  text-align: center;
+  padding: 25px 15px;
+}
+
+header h1 {
+  margin: 0 0 10px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px #0001;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+#results {
+  margin-top: 25px;
+}
+
+.mobile-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 12px #0001;
+}
+
+.mobile-card h2 {
+  color: #172554;
+  overflow-wrap: anywhere;
+}
+
+.store {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.store a {
+  background: #16a34a;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.store a:hover {
+  background: #15803d;
+}
+
+.note {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 550px) {
+  .search-box {
+    flex-direction: column;
+  }
+
+  .store {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>📱 Mobile Price Finder</h1>
+  <p>Find your favorite mobile across shopping websites</p>
+</header>
+
+<div class="container">
+
+  <div class="search-box">
+    <input
+      type="text"
+      id="mobileName"
+      placeholder="Enter mobile model e.g. iPhone 15"
+    >
+
+    <button onclick="searchMobile()">
+      Search Prices
+    </button>
+  </div>
+
+  <div id="results">
+    <p class="note">
+      Enter a mobile name to find shopping links.
+    </p>
+  </div>
+
+</div>
+
+<script>
+
+const stores = [
+  {
+    name: "Amazon",
+    makeUrl: (query) =>
+      "https://www.amazon.in/s?k=" + query
+  },
+  {
+    name: "Flipkart",
+    makeUrl: (query) =>
+      "https://www.flipkart.com/search?q=" + query
+  },
+  {
+    name: "Croma",
+    makeUrl: (query) =>
+      "https://www.croma.com/searchB?q=" + query
+  },
+  {
+    name: "Reliance Digital",
+    makeUrl: (query) =>
+      "https://www.reliancedigital.in/search?q=" + query
+  }
+];
+
+function searchMobile() {
+
+  const name = document
+    .getElementById("mobileName")
+    .value.trim();
+
+  const results = document.getElementById("results");
+
+  results.innerHTML = "";
+
+  if (name === "") {
+    alert("Please enter a mobile model!");
+    return;
+  }
+
+  const query = encodeURIComponent(name);
+
+  const card = document.createElement("div");
+  card.className = "mobile-card";
+
+  const title = document.createElement("h2");
+  title.textContent = "📱 " + name;
+  card.appendChild(title);
+
+  const description = document.createElement("p");
+  description.textContent =
+    "Check current prices and availability:";
+  card.appendChild(description);
+
+  stores.forEach((store) => {
+
+    const row = document.createElement("div");
+    row.className = "store";
+
+    const storeName = document.createElement("strong");
+    storeName.textContent = store.name;
+
+    const link = document.createElement("a");
+    link.href = store.makeUrl(query);
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Check Price ↗";
+
+    row.appendChild(storeName);
+    row.appendChild(link);
+
+    card.appendChild(row);
+
+  });
+
+  const note = document.createElement("p");
+  note.className = "note";
+  note.textContent =
+    "Prices are shown on the shopping websites. " +
+    "Compare the exact model, RAM, storage, and seller.";
+
+  card.appendChild(note);
+  results.appendChild(card);
+
+}
+
+document
+  .getElementById("mobileName")
+  .addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      searchMobile();
+    }
+  });
+
+</script>
+
+</body>
+</html>
